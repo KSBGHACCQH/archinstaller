@@ -1,0 +1,24 @@
+#!/bin/bash
+read -p "What is your system partition?: " syspart
+read -p "What is your boot partition?: " bootpart
+read -p "What is your SWAP partition?: " swappart
+
+# Format partitions
+mkfs.ext4 $syspart
+mkswap $swappart
+mkfs.fat -F 32 $bootpart
+
+# Mount
+mount $syspart /mnt
+mount --mkdir $bootpart /mnt/boot
+swapon $swappart
+
+# Setup mirrors
+pacman -Sy python3 reflector
+
+reflector --latest 100 --sort rate --save /etc/pacman.d/mirrorlist
+
+# Install (Essential) packages
+pacstrap -K /mnt base linux linux-firmware
+
+genfstab -U /mnt >> /mnt/etc/fstab
