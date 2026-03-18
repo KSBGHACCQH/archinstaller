@@ -4,7 +4,7 @@ fdisk -l
 
 read -p "Which disk do you wish to use?:" diskdev
 
-fdisk diskdev
+fdisk $diskdev
 
 read -p "What is your system partition?: " syspart
 read -p "What is your boot partition?: " bootpart
